@@ -26,7 +26,20 @@ class NewVisitorTest(LiveServerTestCase):
 					raise e
 				time.sleep(0.5)
 
-	def test_start_list_and_retrieve_later(self):
+	def test_multiple_users_can_start_lists_at_different_urls(self):
+		#Edith starts a new to-do list
+		self.browser.get(self.live_server_url)
+		inputbox = self.browser.find_element_by_id('id_new_item')
+		inputbox.send_keys('Buy peacock feathers')
+		inputbox.send_keys(Keys.ENTER)
+		self.wait_for_row_in_list_table('1: Buy peacock feathers')
+		
+		#Edith notices that her list has a unique URL
+		edith_list_url = self.browser.current_url
+		self.assertRegex(edith_list_url, '/lists/.+')
+
+
+	def test_can_start_a_list_for_one_user(self):
 		#Bob goes to our website
 		self.browser.get(self.live_server_url)
 
@@ -60,7 +73,9 @@ class NewVisitorTest(LiveServerTestCase):
 		self.wait_for_row_in_list_table('1: Buy peacock feathers')
 		self.wait_for_row_in_list_table('2: Use feathers to make a fly')
 		#The page updates again and shows both items in the list
-		#
+		self.wait_for_row_in_list_table('2: Use feathers to make a fly')
+		self.wait_for_row_in_list_table('1: Buy peacock feathers')
+
 		#Bob wonders if the site will remember the list, then he sees that the site
 		#generated a unique URL for him with explantory text
 		#
