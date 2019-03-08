@@ -116,4 +116,3 @@ class NewVisitorTest(LiveServerTestCase):
 		#
 		#Satisfied he closes the browser
 		#
-		self.fail('Finish the Test')
